@@ -1,0 +1,46 @@
+Name:         spingboot
+Namespace:    default
+Priority:     0
+Node:         ip-172-31-35-41/172.31.35.41
+Start Time:   Thu, 05 Mar 2020 11:14:22 +0000
+Labels:       app=springbootapp
+Annotations:  kubectl.kubernetes.io/last-applied-configuration:
+                {"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"labels":{"app":"springbootapp"},"name":"spingboot","namespace":"default"},"s...
+Status:       Pending
+IP:
+IPs:          <none>
+Containers:
+  springbootmongo:
+    Container ID:
+    Image:          poorna5950/spring-boot-mongo
+    Image ID:
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Waiting
+      Reason:       ContainerCreating
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-wznbp (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-wznbp:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-wznbp
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type     Reason                  Age        From                      Message
+  ----     ------                  ----       ----                      -------
+  Normal   Scheduled               <unknown>  default-scheduler         Successfully assigned default/spingboot to ip-172-31-35-41
+  Warning  FailedCreatePodSandBox  2m16s      kubelet, ip-172-31-35-41  Failed to create pod sandbox: rpc error: code = Unknown desc = failed to set up sandbox container "3d0037cbe3d4f539eb73761ba152eea40dbd075683fbafba73d32090c215de6e" network for pod "spingboot": networkPlugin cni failed to set up pod "spingboot_default" network: netplugin failed with no error message
+  Normal   SandboxChanged          2m16s      kubelet, ip-172-31-35-41  Pod sandbox changed, it will be killed and re-created.

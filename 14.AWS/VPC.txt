@@ -1,0 +1,59 @@
+
+
+VPC --> Virtual Private Cloud
+
+We have define Network Range(CIDR) For VPC.
+
+CIDR --> Class Interdomain Routing. It's Alogorithm for
+allocating IP Addresses for our network.
+
+172.0.0.0/16 
+
+                    32-n      32-16      16
+Total No Of IPS = 2.      = 2        = 2   = 65536
+
+172.0.0.0/24
+                    32-n      32-24      8
+Total No Of IPS = 2.      = 2        = 2   = 256
+
+172.0.0.0/28
+                    32-n      32-28      4
+Total No Of IPS = 2.      = 2        = 2   = 16
+
+Siderblock Range should be with in 16-28.
+
+
+Subnets
+ Private Subnet
+ Public  Subnet
+
+While Creating Subnet Also We have to define CIDR for subnet. It should be subset of VPC CIDR.
+
+If my VPC CIDR is : 172.0.0.0/24 = 256
+
+Total IPS Available for US = Total IPS - NoSubnets*5.
+
+256-10= 246
+If i plan my vpc with subnets my Subents CIDR will be like below.
+
+Subnet One CIDR --> 172.0.0.0/25 = 172.0.0.0-172.0.0.127
+
+Subnet Two CIDR --> 172.0.0.128/25 = 172.0.0.128-172.0.0.255
+
+IGW  --> Internet GateWay.It's Virtual Router Which will enable internet connectivity to the VPC.
+
+Route Table
+
+
+Below Two Are Optional 
+
+NAT --> Network Address Translator. Nat Instance will enable internet connectivity to private subnet servers. Nat instance should be created in public subnet. Assocaite NAT with Private Subnet in RT.
+
+
+NACL --> Network Access Controll List. NACL is a fire at the subnet level. 
+
+
+
+What is VPC Peering ?
+
+

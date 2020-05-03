@@ -1,0 +1,9 @@
+apiVersion: V1
+kind: deployemnt 
+metadata:
+  name:nginxService
+  labels:
+    app:nginx
+spec:
+  app: nginxService
+  name: nginx

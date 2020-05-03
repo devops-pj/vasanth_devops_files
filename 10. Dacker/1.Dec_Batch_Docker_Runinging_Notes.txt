@@ -1,0 +1,74 @@
+
+
+15-02-2020 7:00 PM
+==================
+Docker 
+
+Containarization Platfrom using which we can package our applications(code) & required softwares to run application in the form of
+containers.
+
+Build Once Run AnyWhere(Physical Machine,Virtural Machine,Cloud).
+
+Docker has two editions:
+
+Docker CE --> Community Edition(Open Source)
+ 
+Docker EE --> Enterprise Edition(Commerical)
+
+Components/Terminology:
+=======================
+Docker Image
+Docker Container
+Docker Registry(Repository)
+  Public --> hub.docker.com (Public Accessable from anywhere)
+  Private --> Can be accessable with in private network(Nexus,JFrog)
+Dockerfile
+
+
+
+docker build -t   <repoDetails>/<appName>:<version> . 
+
+ex: 
+# docker hub dockerhandson is username of my repo.Replace dockerhandson with your user name.
+docker build -t dockrhandson/java-web-app:1 .
+ 
+# Image tagged with rivate repo  
+docker build -t 189.98.72.182:8081/java-web-app:1 .
+	
+# Authenticate with Repo
+#Public Repo(docker hub)	
+docker login -u <username> -p <password>
+
+ex:
+
+docker login -u dockerhandson -p password
+
+#Private Repo
+docker login -u <username> -p <password> <URL>	
+
+docker login -u admin -p password 189.98.72.182:8081
+
+# Docker push
+
+docker push <repoDetails>/<appName>:<version>
+
+# Image tagged with Public  Repo
+docker push  dockrhandson/java-web-app:1
+
+# Image tagged with Privare Repo
+docker push 189.98.72.182:8081/java-web-app:1
+
+	
+docker run -d -p <hostPort>:<containerPort> --name <containerName> <imageName>
+
+ex: 
+docker run -d -p 8080:8080 --name javawebappcontainer dockerhandson/java-web-app:1
+	
+
+
+
+
+
+
+
+

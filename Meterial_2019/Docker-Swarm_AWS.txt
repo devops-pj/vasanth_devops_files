@@ -1,0 +1,138 @@
+Create 3 Ubuntu Linux Systems in AWS Execute following commands 
+
+sudo apt-get update
+sudo apt-get install curl -y
+curl -fsSL get.docksal.io | bash
+sudo usermod -aG docker ubuntu
+
+logout from the the terminal and login again
+
+======================================================================\
+
+docker swarm init  --listen-addr=eth0 --advertise-addr $(curl http://169.254.169.254/latest/meta-data/public-ipv4) (Only run in manager node)
+
+docker swarm join-token worker (Get the token in manager & exeute in nodes)
+
+
+======================================================================
+
+
+
+docker run  imageName --> It will create/deploy one application  in single machine  --> docker service create
+
+docker-compose up     --> To create/deploy mutiple applications in single mahcine   --> docker stack deploy --composefile docker-compose.yml
+
+
+
+Docker Swarm has two modes
+
+Global   --> All the nodes (3 servers 1 Manager + 2 Workers)
+Replicas --> It will deploye based on replicated number.
+
+docker service create  -p 80:80 --name nginx --mode global nginx
+
+docker service create  -p 8080:8080 --name gradlewebapp --mode global dockerhandson/gradle-web-app
+
+docker service create  -p 80:80 --name nginx --replicas 2 nginx
+
+docker service create --name nginx --mode global --constraint 'node.role==worker' nginx
+
+
+docker service create --name nginx --replicas 2 --constraint 'node.role==worker' nginx
+
+docker service create  -p 8080:8080 --name gradlewebapp --replicas 1 --constraint 'node.role==worker' dockerhandson/gradle-web-app
+
+
+
+
+
+docker service scale nginx=3
+
+docker service rm nginx
+
+docker service create --name nginx --mode global --constraint 'node.role==worker' nginx
+
+=======================================================================
+
+version: '3.1'
+
+services:
+  springboot:
+    image: dockerhandson/springboot-mongo-demo:latest
+    restart: always
+    container_name: springboot
+    ports:
+      - 8182:8080
+    working_dir: /opt/app
+    depends_on:
+      - mongo
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s      
+      restart_policy:
+        condition: on-failure   
+
+  mongo:
+    image: mongo
+    container_name: mongo
+#    ports:  # for demo/debug purpose only
+#      - 27018:27017
+    volumes:
+      - data:/data/db
+      - data-bkp:/data/bkp
+    restart: always
+    
+volumes:
+    data:
+    data-bkp:
+
+=================================================================
+
+
+docker stack deploy --compose-file docker-compose.yml springmongo
+
+docker swarm leave
+
+docker node rm <nodename>
+
+version: '3.1'
+  
+services:
+  springboot:
+    image: dockerhandson/springboot-mongo-demo:latest
+    restart: always
+    container_name: springboot
+    ports:
+      - 8182:8080
+    working_dir: /opt/app
+    depends_on:
+      - mongo
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+  mongo:
+    image: mongo
+    container_name: mongo
+#    ports:  # for demo/debug purpose only
+#      - 27018:27017
+    volumes:
+      - data:/data/db
+      - data-bkp:/data/bkp
+    restart: always
+
+volumes:
+    data:
+    data-bkp:
+networks:
+  default:
+    external:
+      name: customoverlay
+
+

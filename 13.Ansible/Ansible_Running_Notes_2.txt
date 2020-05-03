@@ -1,0 +1,263 @@
+
+Ansible 
+Date: 15-Mar-2020 7:00 PM
+
+Host Inventory
+ 
+ Static Inventory. 
+ Its simple file where we will add/maintain Host Machines(Server).
+ Default Location: /etc/ansible/hosts
+   
+   
+ 
+ Dynamic Inventory
+ It's a script(python Script) which will get/read host machines      details from external
+ 
+  sources like directly from AWS,Data Bases ..etc.
+  
+# Ansible adhoc commands
+
+# Below commond will test connectivity(SSH Connection).
+
+
+# Below One will defautl hosts file(/etc/ansible/hosts)
+ansible <group> -m <moduleName> -a <arguments>
+
+
+# Below One will custom  hosts file(Give path of your hosts file which can be anywhere ins your ansible server)
+
+ansible <group> --inventory-file <customlocation> -m <moduleName> -a <arguments for Module>
+
+
+ansible <group> -b -m <module> -a <argument>
+-b --> become(execute commands with privalge(sudo) access)
+
+
+shell & command modules in ansible are non ideompotent.
+
+
+Install Httpd
+ansible appServers -b -m yum -a "name=httpd state=present"
+ 
+Copy Index.html 
+ 
+ansible appSevers -b -m copy -a "src=index.html dest=/var/www/html/index.html"
+ 
+Start httpd Service
+ ansible appServers -b -m service -a "name=httpd state=started"
+
+- hosts: appServers
+  become: true
+  tasks:
+  - name: Install httpd
+    yum:
+	  name: httpd
+	  state: present
+  - name: Copy Index.html
+    copy:
+	  src: index.html
+	  dest: /var/www/html/index.html
+  - name: Start Httpd Service
+    service:
+	  name: httpd
+	  state: restarted	
+	  
+Above Yml & below both are same.
+	  
+- hosts: appServers
+  become: true
+  tasks:
+  - name: Install nginx server
+    yum: name=httpd state=present
+  - name: Copy Index.html
+    copy: src=index.html dest=/var/www/html/index.html	
+  - name: Start nginx server
+    service: name=httpd enabled=yes state=started
+         
+...
+	    	  
+  
+Commonds to execute a play book
+ansible-playbook <playbookName>
+
+ansible-playbook installhttpd.yml
+
+How can we validate ansible playbook?
+
+ansible-playbook <playbookName> --syntax-check
+
+Which module can be using in absible irrepective of linux to install softwares using packagemanagers ?
+ package
+
+
+21-Mar-2020 6:00 AM
+
+What is dry run in ansible how to dry run ansible play book?
+ansible-playbook <playbookName> --check 
+
+What is verbose in ansible?How to run play book in verbose mode?
+
+ansible-playbook <playbookName> -v
+ansible-playbook <playbookName> -vv
+ansible-playbook <playbookName> -vvv
+
+
+
+ansible-playbook <playbookName> --step
+
+ansible-playbook <playbookName> --list-hosts
+
+
+How can we execute/skip specific task(s) while executing ansible playbook?
+
+Using tags we can achive this.Firt give a tags for taks in our ansible play book.Then we can use option --tags to execute specific tasks or --skip-tags to skip sepecific tasks.
+
+# Tasks with tags
+- hosts: appServers
+  become: true
+  tasks:
+  - name: Install httpd
+    yum:
+      name: httpd
+      state: present
+    tags:
+    - install
+    - setup
+  - name: Copy Index.html
+    copy:
+      src: index.html
+      dest: /var/www/html/index.html
+    tags:
+    - copy 
+  - name: ReStart httpd service
+    tags:
+    - start
+    - setup
+    service:
+       name: httpd
+       state: restarted
+	   
+ansible-playbook <playbookName> --list-tags
+
+ansible-playbook <playbookName> --tags "<tagName>"
+
+ansible-playbook <playbookName> --tags "<tagName> <tagName>"
+
+ansible-playbook <playbookName> --skip-tags "<tagName>"
+
+
+ansible-playbook <playbookName> --skip-tags "<tagName> <tagName>"
+
+
+What is difference b/w copy module and template module?
+ Both templat and copy module we can use to copy files.
+ Using template module we can replace varaibles with values while copying.But
+ Copy module will not replace variables.
+
+
+
+What is handler?
+Handler is also special kind of task. By Default handlers will not get executed. Some task has to notified  the handler. 
+
+what is difference b/w tasks and handlers ?
+Tasks will get executed by default from top to bottom. Handlers will not get
+exeucted un less until some task notifed the handlder.
+
+
+Install git,wget,zip,unzip Softwares?
+
+- hosts: all
+  become: true
+  tasks:
+  - name: Install Git
+    yum:
+	  name: git
+	  state: present
+  - name: Install wget
+    yum:
+	  name: wget  
+	  state: present
+  - name: Install zip
+    yum:
+	  name: zip
+	  state: present
+  - name: Install unzip
+    yum:
+	  name: unzip
+	  state: present
+	  
+Instead of 4 tasks we can achive above requirement in single task using loops.
+
+- hosts: all
+  become: true
+  tasks:
+  - name: Install Softwares
+    yum:
+	  name: '{{item}}'
+	  state: present
+	with_items:
+	- zip
+	- git
+	- unzip
+	- wget
+	
+	Or
+	
+- hosts: all
+  become: true
+  tasks:
+  - name: Install Softwares
+    yum:
+	  name: ['git','wget','zip','unzip']
+	  state: present
+
+
+- hosts: all
+  become: true
+  tasks:
+  - name: Install Softwares
+    yum:
+      name: '{{item.name}}'
+      state: '{{item.state}}'
+    with_items:
+    - { name: 'zip' , state: 'present' }
+    - { name: 'git' , state: 'absent' }	   
+
+
+- hosts: all
+  become: true
+  tasks:
+  - name: Install Softwares
+    copy:
+      src: '{{item.filename}}'
+      dest: '{{item.dest}}'
+    with_items:
+    - { filename: 'index.html' , dest: '/var/www/html/index.html' }
+    - { filename: 'test.xml' , dest: '/tmp/test.xml' }	
+	  
+Conditions
+
+Varaibles
+
+
+Variables in Ansible
+We can define varaible in ansible in multiple ways.
+1) Playbook Variables
+2) Group Vars
+3) Host Vars
+4) Role Vars
+5) Run time vars (--extra-vars "varname=value varname=value")
+
+
+
+2) Group Vars
+3) Host Vars
+
+Ansible Vault
+
+Ansible Roles
+
+
+
+
+

@@ -1,0 +1,923 @@
+
+
+15-02-2020 7:00 PM
+==================
+Docker 
+
+Containarization Platfrom using which we can package our applications(code) & required softwares to run application in the form of
+containers.
+
+Build Once Run AnyWhere(Physical Machine,Virtural Machine,Cloud).
+
+Docker has two editions:
+
+Docker CE --> Community Edition(Open Source)
+ 
+Docker EE --> Enterprise Edition(Commerical)
+
+Components/Terminology:
+=======================
+Docker Image
+Docker Container
+Docker Registry(Repository)
+  Public --> hub.docker.com (Public Accessable from anywhere)
+  Private --> Can be accessable with in private network(Nexus,JFrog)
+Dockerfile
+
+
+
+docker build -t   <repoDetails>/<appName>:<version> . 
+
+ex: 
+# docker hub dockerhandson is username of my repo.Replace dockerhandson with your user name.
+docker build -t dockrhandson/java-web-app:1 .
+ 
+# Image tagged with rivate repo  
+docker build -t 189.98.72.182:8081/java-web-app:1 .
+	
+# Authenticate with Repo
+#Public Repo(docker hub)	
+docker login -u <username> -p <password>
+
+ex:
+
+docker login -u dockerhandson -p password
+
+#Private Repo
+docker login -u <username> -p <password> <URL>	
+
+docker login -u admin -p password 189.98.72.182:8081
+
+# Docker push
+
+docker push <repoDetails>/<appName>:<version>
+
+# Image tagged with Public  Repo
+docker push  dockrhandson/java-web-app:1
+
+# Image tagged with Privare Repo
+docker push 189.98.72.182:8081/java-web-app:1
+
+	
+docker run -d -p <hostPort>:<containerPort> --name <containerName> <imageName>
+
+ex: 
+docker run -d -p 8080:8080 --name javawebappcontainer dockerhandson/java-web-app:1
+	
+
+16-02-2020 6:00 AM
+==================
+
+docker version
+docker --version
+docker info
+
+Image Commands:
+==============
+Docker Image:  It's package which will have all the required components like application                code & softwares which are required to run application. 
+
+Base Images :  Software images which contains some software.Like  			 			                ubuntu,centos,tomcat,mysql,jenkins ..etc.
+               
+			   
+
+Custom Images: We can create our own image using docker file on top of base image which  			   can have application code + Softwares.
+
+
+Create a simple docker image from nginx
+
+# Create one index.html
+vi index.html
+ 
+#Create Dockerfile(Default Name)
+
+FROM nginx
+COPY index.html /usr/share/nginx/html
+
+
+docker build -t <repodetails/appName:version> .
+
+Ex:
+docker build -t dockerhandson/testnginx .
+
+#Tag image with private Repo
+
+docker build -t 189.81.23.41:8081/testnginx .
+
+# List images in the docker machine
+docker images (or)  docker image ls
+
+
+# Authenticat with Repo
+
+# With public repo
+docker login -u <userName> -p <password>
+
+ex:
+docker login -u username -p password
+
+# With Private Rep
+docker login -u <userName>. -p <password>.   <RepoURL>
+
+ex:
+docker login -u admin -p password 189.81.23.41:8081
+
+# Push image to repo
+docker push <repodetails/appName:version>
+
+ex:
+docker push dockerhandson/testnginx
+
+# Download Image From Repo
+docker pull <ImageId/Name>
+
+#Delete Image from docker machine
+docker rmi <ImageName/ImageID>
+
+ex:
+docker rmi dockerhandson/testnginx:latest
+
+docker rmi <ImageName/ImageID> <ImageName/ImageID>
+
+Delete all images
+=================
+docker rmi -f $(docker images -q)
+
+# It will also delete all unsued images
+docker image prune
+
+# It will delete all stopped containers ,all unused images,un used networks.
+docker system prune
+
+# Get more details about an image
+docker image inspect <imageId/ImageName>
+docker inspect <imageId/ImageName>
+
+# Get Layers of an image
+docker history <imageId/ImageName>
+
+
+How can we move image from one system to another system with out repo?
+
+1) # Save image as a tar file in source system where u have a image.
+docker save <imageName> - o <FileName>.tar
+
+2) SCP image tar file from source system to destination system
+scp <FileName>.tar username@DestionationIP
+
+3) In destination server execute docker load to load image from tar file.
+
+docker load -i <FileName>.tar
+
+
+
+
+
+
+docker build
+docker push
+docker login
+docker images or docker image ls
+docker images -q
+docker rmi <imageId/Name>
+docker rmi -f <imageId/Name>  <imageId/Name>
+docker rmi -f $(docker images -q)
+docker image prune
+docker system prune
+docker image inspect <imageId/Name>
+docker inspect <imageId/Name>
+docker history <imageId/Name>
+docker search <imageName>
+docker save
+docker load
+
+
+Contanier Commands
+==================
+
+# It will create container from the image but it will not start the container.
+
+docker create --name <contaierName> - p <hostPort>:<containerPort> <imageName>
+
+
+# It will create  & Start container from the image.
+docker run -d --name <contaierName> - p <hostPort>:<containerPort> <imageName>
+
+ex: 
+docker run -d -p 80:80 --name nginxcontianer dockerhandson/testnginx
+
+# List Running Containers
+docker ps or docker container ls 
+
+# List All Containers Running+Stopped
+docker ps -a or docker container ls -a
+docker ps --all or docker container ls --all
+
+# List Only Stopped Contianers
+docker ps -a --filter "status=exited"
+
+# Inspect Container
+
+docker container inspect <containerId/Name>
+docker inspect <containerId/Name>
+
+# Start Container
+docker start <containerId/Name>
+
+# Stop Container
+docker stop <containerId/Name>
+
+# Restart Container
+docker restart <containerId/Name>
+
+# Pause Container(It will pause container process)
+docker pause <containerId/Name>
+
+# Un Pause Container
+docker unpause <containerId/Name>
+
+Q) How can we copy files from HostSystem to Container or Container to HostSystem?
+
+# Container to system
+docker cp <containerName>:/<ContainerFilePath>  <SystemFileName>
+
+# System to Cotnainer
+docker cp <SourceFile/SystemFilePath> <containerName>:/<ContainerFilePath>
+
+How can we troubleshoot or debug applications which are running as a conainers?
+
+# It will disply Standard Out ,Standard Error Of Container terminal.
+docker logs <containerName/Id>
+docker logs --tail <NoLines> <containerName/Id>
+docker logs -f <containerName/Id>
+
+
+# It will display Memory/CPU Usage of a cotainer. 
+docker stats <containerName/Id>
+# It will process detials which is runing inside a container
+docker top <containerName/Id>
+
+# We can execute commands inside container
+docker exec <ContainerID/Name> <Command>
+ex:
+  docker exec javawebapp pwd
+  docker exec javawebapp ps
+  
+  docker exec javawebapp cat /etc/*releases
+ 
+Q) How can we login or go inside into to container?
+
+ docker exec -it <containerName/ID>  /bin/bash
+ 
+ docker exec -it <containerName/ID>  bash
+ 
+ docker exec -it <containerName/ID>  sh
+ 
+# It will attach container process(terminal) to the host     	system  
+docker attach <containerName/ID>
+
+
+# We can create a image from the container.
+docker commit <containerID/Name> <imageName>
+
+
+# Remove Containers
+
+# Below command can remove container if container is in stopped/exited state.
+docker rm <containerID/Name>
+
+# Below command can remove runinging container(Force Remove).
+docker rm -f  <containerID/Name>
+
+# How to remove all stopped containers
+docker container prune
+docker rm $(docker ps -aq --filter "status=exited")
+
+# Remove Paused Containers
+docker rm -f $(docker ps -aq --filter "status=paused")
+
+# Remove Paused Containers
+docker rm -f $(docker ps -aq --filter "status=paused")
+
+# Remove All Containers
+docker rm -f $(docker ps -aq)
+
+
+# Who can we delete containers which are created from specific image?
+
+docker ps -a|awk '$2=="<imageNameWithVersion>" {print  $1}' |xargs docker rm -f
+
+Ex:
+
+docker ps -a|awk '$2=="dockerhandson/java-web-app" {print  $1}' |xargs docker rm -f
+
+
+
+22-Feb-2020 6:00 AM
+===================
+Monolothic --> Application Will be having a single code base.
+
+Flipkart(Example)
+Features
+ --> SignUp
+ --> SignIn
+ --> CheckOut(AddToCart)
+ --> Payments
+ --> Orders
+ --> MyAccount
+ 
+It will generate only one build artifact.(war/ear) 
+
+If Develepment is following Monolothic Architecture all the features(modules) will be part of same code base(Git Repo). Entire
+application will be build as a single package.
+
+Disadvantages:
+
+1) Maintaince:
+
+2) Deployment --> Eventhough there is smale change in one feature.Complete application has to rebuild,retest and deploy entire application.
+
+2) Scaling: We will endup scaling entire application (all features) eventhough we want to scall one few features since all features are part of sample code base hence same build package.
+
+
+
+MicroServcies --> Application Will be developed as collection of mutiple independent services ,having a multiple code bases.
+
+
+ Flipkart
+ Features
+  --> SignUp --> Git Repo --> singup.jar/war --> DockerImage  --> Container
+  --> SignIn --> Git Repo --> signin.jar/war --> DockerImage  --> Container
+  --> CheckOut(AddToCart) --> Git Repo --> checkout.jar/war
+  --> Payments --> Git Repo --> checkout.jar/war
+  --> Orders  --> Git Repo --> checkout.jar/war
+  --> MyAccount --> Git Repo --> checkout.jar/war
+  
+
+Dockerfile Keywords
+==================
+#Sample Dockerfile
+
+FROM tomcat:openjdk-8
+COPY target/*war /usr/local/tomcat/webapps/java-web-app.war
+
+Docker file keywords
+
+FROM --> FROM indicates from which base image() you want to create your own image.
+
+ex: 
+(Only OS no Softwares)
+FROM ubuntu 
+FROM centos
+FROM tomcat:openjdk-8 (OS + Java+Tomcat Sofwares)
+FROM openjdk:8 (OS + Java8)
+FROM nginx (OS + nginx)
+FROM node (OS + node software)
+FROM python(OS + python)
+
+Note: In one docker file we can have more than one FROM keywords. But 99% In Dockerfile we will use only one FROM <baseimageName>. Base Image is dependson on what type of application we want to build&run as part of docker.
+
+
+MAINTAINER --> It's depricated in latest versions. It's just info about who is maintaining/created the docker file. It's about author of dockefile.
+
+ex: 
+MAINTAINER  mihtuntechnologies@gmai.com
+
+COPY --> It can copy files from host/local system(Where u are building an image) to image while creating an image.
+
+ex:
+
+COPY  <sourceFilePath>         <destinationPath>
+      <Local/SystemFilePath>   <imagePath>
+
+COPY target/java-web-app*.war /usr/local/tomcat/webapps/java-web-app.war
+
+ADD --> It can copy files from host/local system to an image. And also it can download files from remote http/s locations.
+
+Ex:
+
+ADD <sourceFilePath>  <destinationPath>
+
+ADD <sourceFileHTTP/S URL> <destinationPath>
+
+ADD target/java-web-app*.war /usr/local/tomcat/webapps/java-web-app.war
+
+ADD http://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.51/bin/apache-tomcat-8.5.51.tar.gz /opt/tomcat
+
+
+RUN --> RUN keyword indicates the command that needs to be executed 
+		 on the image. RUN keywords will be processed or executed  		 while creating a image. We can have n number of RUN keyword 
+		 in a Dockerfile. All RUN keywords will be executed.
+		 
+EX:
+
+RUN <command> (shell form)
+Inside image your command will be processed like below.
+/bin/sh -c command 
+ex:
+
+RUN mkdir -p /opt/tomcat
+
+RUN ["executable", "param1", "param2"] (Executable form)
+Inside image your command will be processed like below.
+/bin/executable  param1 param2
+
+RUN ['mkdir', '-p', '/opt/tomcat']
+
+
+RUN apt install git
+RUN apt install vim
+
+
+CMD --> CMD key word will indicate what command has to be executed 	while creating a container.We can have more than on CMD in 		docker file.But only latest/recent CMD will be executed.
+
+CMD java -jar <jarName>
+/bin/sh -c java -jar jarName
+
+CMD ['java' , '-jar' , 'jarName']
+/bin/java -jar jarName
+
+ENTRYPOINT --> Entry Point also will get executed while creating a container. 
+
+ENTRYPOINT java -jar jarName(ShellForm)
+ENTRYPOINT ["java",'-jar' , 'Jarname'] (Executable Form)
+
+
+
+22-Feb-2020 7:00 PM
+===================
+
+What is difference between CMD & ENTRYPOINT ?
+CMD  can be overridden while creating a container. ENTRYPOINT can't be overrridden while creating a contianer.
+
+Can we have both CMD & EntryPoint in a dockerfile?
+Yes We can have both in a Dockerfile.If we have both CMD & EntryPoint. CMD will be passed as an argument for ENTRYPOINT.
+
+We can use both CMD & ENTRYPOINT for below requirement.
+
+Contaienr should run alywas same process(program) with defulat arguments . But dynamically i should be able to change arguments while creating a container. 
+
+ENTRYPOINT["echo" , "FROM Dockerfile EntryPoint"]
+CMD["ls" "/usr"]
+
+
+
+
+Shell and Exec forms
+
+All three instructions (RUN, CMD and ENTRYPOINT) can be specified in shell form or exec form. Let’s get familiar with these forms first.
+
+RUN <command> (shell form)
+RUN ["executable", "param1", "param2"] (exec form)
+
+CMD <command> (shell form)
+CMD ["executable", "param1", "param2"] (exec form)
+
+ENTRYPOINT <command> (shell form)
+ENTRYPOINT ["executable", "param1", "param2"] (exec form)
+
+Shell form
+<instruction> <command>
+
+Examples:
+
+RUN apt-get install python3
+CMD echo "Hello world"
+ENTRYPOINT echo "Hello world"
+
+When instruction is executed in shell form it calls /bin/sh -c <command> under the hood and normal shell processing happens. For example, the following snippet in Dockerfile
+
+ENV name John Dow
+ENTRYPOINT echo "Hello, $name"
+
+when container runs as docker run -it <image> will produce output
+
+Hello, John Dow
+Note that variable name is replaced with its value.
+
+
+Exec form
+This is the preferred form for CMD and ENTRYPOINT instructions.
+
+<instruction> ["executable", "param1", "param2", ...]
+
+Examples:
+
+RUN ["apt-get", "install", "python3"]
+CMD ["/bin/echo", "Hello world"]
+ENTRYPOINT ["/bin/echo", "Hello world"]
+
+When instruction is executed in exec form it calls executable directly, and shell processing does not happen. For example, the following snippet in Dockerfile
+
+ENV name John Dow
+ENTRYPOINT ["/bin/echo", "Hello, $name"]
+when container runs as docker run -it <image> will produce output
+
+Hello, $name
+Note that variable name is not substituted.
+
+
+Note: 
+
+Whether you're using ENTRYPOINT or CMD (or both) the recommendation is to always use the exec form so that's it's obvious which command is running as PID 1 inside your container.
+
+•	You may also run into problems with the shell form if you're building a minimal image which doesn't even include a shell binary. When Docker is constructing the command to be run it doesn't check to see if the shell is available inside the container -- if you don't have /bin/sh in your image, the container will simply fail to start.
+When using the shell form of either the ENTRYPOINT or CMD instruction.If we need to send any sort of POSIX(SIGKILL,SIGTERM,SIGSTOP) signals to the container since /bin/sh won't forward signals to child processes. 
+
+
+Refer Below Links for more details:
+
+https://www.ctl.io/developers/blog/post/gracefully-stopping-docker-containers/
+https://www.ctl.io/developers/blog/post/dockerfile-entrypoint-vs-cmd/
+
+
+
+23-Feb-2020 6:00 AM
+===================
+
+EXPOSE
+
+The EXPOSE instruction does not actually publish the port. It functions as a type of documentation between the person who builds the image and the person who runs the container, about which ports are intended to be published.
+
+EX:
+EXPOSE <port>
+
+EXPOSE 8080
+
+EXPOSE 8081
+
+EXPOSE 3306
+
+WORKDIR -->  We can set Working directory using WORKDIR key for  image/container.
+
+ex: 
+
+WORKDIR  /usr/local/tomcat
+
+
+
+LABEL --> We can set labels(metadata) for an image using LABEL KeyWord.
+
+Ex:
+
+LABEL <key> <value>
+
+LABEL branch develop
+
+VOLUME --> VOLUME keyword will mount contianer file system to docker host file system. We will use Volume to take a back up of contianers file system.
+
+EX: 
+
+VOLUME <ContianerFolderPath>
+
+VOLUME /var/lib/jenkins
+VOLUME /data/db
+
+
+USER  --> It will set USER for a image/container so that container will run as the given USER.
+
+USER jenkins
+
+USER nexus
+
+ENV  --> It will set an environment varibale for an image.
+
+ENV <key> <Value>
+
+ex:
+
+ENV JAVA_HOME /usr/local/java
+ENV CATALINA_HOME /usr/local/tomcat
+
+
+ARG --> We define argumetns so that we can refer any where in Dockefile and also we can dynamically pass argument values while creating an image.
+ARG <key>=<value>
+
+
+What are the best practices we should follow in Dockerfile?
+1) Try to use alpine images where ever is possible.
+2) Don't install unneccessary packages/softwares in Dockerimage.We should have
+   only minimal packages/softwares which are required to be run our application.
+3) Try to reduce number of layes as much as possible, by mereging muttiple run commands
+   into a signle command whereever is possible.
+
+
+Docker Networks
+One cotnainer can to talk to another container if both contaienrs are in same docker network.
+
+Docker has 3 types of networks by defualt.
+
+# List Networks
+docker network ls
+
+1) dridge(default bridge)
+2) host
+3) none
+
+While creating a container if we don't mention the docker network name containers will be created in default brige network. If containers are in defualt bridge network communication happens using only IP. Cotnainers can't access each other using cotnaienr name.
+
+
+bridge
+  default bridge
+  custom bridge
+  
+host --> Container will be created in host network,we no need to do port publish/forword.Container          will not have ip.Can be accessable using System IP and port.
+
+none --> Container will be created in none/null network.Container will not have ip.Can't be      		 accessable.
+
+
+
+# Create Network
+Syntax: docker network create -d <driver> <networkName>
+
+Ex: 
+docker network create -d bridge flipkartnetwork
+
+# Inspect network
+docker network inspect <networkNameOrId>
+
+# Remove unused networks
+docker network prune 
+
+# Remove One or More Cotnainers
+docker network rm <networkNameOrId>
+Container to container communication can happen using Name(HostName)/IP in custom bridge.
+
+Create containes in custom bridge
+
+docker run -d -p 8080:8080 --name tomcatcotnainer --network flipkartnetwork dockerhandson/java-web-app
+
+Create another container in same network and try to ping with name & IP from above container.
+
+docker run -d -p 8080:8080 --name dbcontainer --network flipkartnetwork dockerhandson/java-web-app
+
+
+docker inspect dockerhandson (Get IP)
+
+Login to tomcatcotnainer and ping db container using name & IP to test connectivity.
+
+docker login exec -it tomcatcotnainer
+ping dockerhandson
+ping <IP>
+
+
+
+
+23-Feb-2020 7:00 PM
+==================
+
+
+Volumes:
+=======
+
+1) Create docker network using below commond(If it's not created already)
+
+     docker network create  -d bridge flipkartnetwork
+
+2) Create Spring Application Container in above network & which will talk to mongo data base container
+
+     docker run -d -p 8080:8080 --name springapp --network flipkartnetwork dockerhandson/spring-boot-mongo:latest
+
+3) Create a mongo contianer with out volume in above network
+
+     docker run -d --name mongo --network flipkartnetwork mongo
+ 
+4) Access Spring application & insert data it will be inserted to mongo db. Delete and recreate mongo container 
+   what ever you have inserted will no longer be availbale. As once we delete contaienr data also will be deleted
+   in container.
+   
+   To take data backup from container we have to use volunmes
+   
+5) Create a volume a Local Volume(Execute docker volume ls to check existing volumes)
+
+     docker volume create dbbackup
+	 # To list volumes
+	 docker volume ls
+   
+6) Use above volume while creating container.
+
+     docker run -d --name mongo -v dbbackup:/data/db  --network flipkartnetwork mongo
+   
+7) Access Spring application & insert data it will be inserted to mongo db. Delete and recreate mongo container 
+   with same volume mapping. You can see the data back.
+   
+   
+    
+ ===== Network Volumes Using AWS EBS==========
+ 
+ 1) Create IAM User with EC2 Full Access and user access key & Secret Key of the same. Replace your access key & secret below.
+
+ docker plugin install rexray/ebs EBS_ACCESSKEY=AKIAZXQITIEDYDKJRX66 EBS_SECRETKEY=L5oxizF4AMqJ6nmsyErgssLohX4DpXVN/1Zn101k
+
+ docker volume create --driver rexray/ebs --name ebsvolume
+
+ docker run -d -p 27017:27017 --name mongocontainer --network flipkartnetwork  -v ebsvolume:/data/db mongo
+
+
+
+Docker Compose:
+
+It's tool for defining and runing multicontainer applications.It's a yml file.
+
+With Out Compose:
+
+We have to run long docker run commands to deploy multi continer applications.
+
+
+docker volume create -d <driver> <volumeName>
+
+docker volume create -d local mongobackup
+
+docker network create -d <driver> <networkNAme>
+
+docker network create -d bridge springappnetwork
+
+
+docker run -d -p 8080:8080 --name springcontaienr --network springappnetwork dockerhandson/spring-boot-docker
+
+docker run -d --name mongo --network springappnetwork -v mongobackup:/data/db mongo
+
+
+
+With Compose
+
+Install docker compose using below command:
+
+sudo apt install docker-compose
+
+We will define all the serivces(cotainers) details in compose file using compose file we can deploy multi container applications.
+
+
+defautl name: docker-compose.yml or docker-compose.yaml
+
+Example 1: (Volumes & Networks also will be created by docker compose)
+
+version: '3.1' # Docker Comopose File Format Version
+
+services:
+  springapp:
+    image: dockerhandson/spring-boot-mongo
+    ports:
+    - 8080:8080
+    networks:
+    - flipkartbridge
+    container_name: springappcotnaienr
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    networks:
+    - flipkartbridge
+    volumes:
+    - mongobkp:/data/db
+
+volumes:
+  mongobkp:
+         
+networks:
+  flipkartbridge:
+     driver: bridge
+	
+Example 2: (Volumes & Networks will not be created by docker compose.As we set volumes and networks as external)
+==========
+
+version: "3.1"
+services:
+  springboot:
+    image: dockerhandson/spring-boot-mongo
+    container_name: springboot
+    ports:
+    - 8080:8080
+    
+  mongo: 
+    image: mongo
+    container_name: mongo
+    volumes:
+    - mongobackup:/data/db
+
+volumes:
+  mongobackup:
+    external: true
+
+networks:
+  default:
+   external:
+    name: springappnetwork 
+
+	
+	
+docker-compose conig
+	
+docker-compose up -d
+
+docker-compose down	
+
+Example 3: (Volumes & Networks will be created by docker compose.We can pass environment varibles to containers while creating if required).
+==========
+
+If Custom Name 
+
+docker-compose-wordpress.yml
+
+version: '3.1'
+
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - db_data:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: somewordpress
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+     networks:
+     - wordpressnetwork  
+
+   wordpress:
+     depends_on:
+       - db
+     image: wordpress:latest
+     ports:
+       - "8000:80"
+     restart: always
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: wordpress
+       WORDPRESS_DB_PASSWORD: wordpress
+     networks:
+     - wordpressnetwork
+
+volumes:
+  db_data:
+
+networks:
+  wordpressnetwork:
+    driver: bridge
+	
+
+docker-compose -f docker-compose-wordpress.yml config
+
+docker-compose -f docker-compose-wordpress.yml up -d
+
+docker-compose -f docker-compose-wordpress.yml down
+
+
+Docker Compose Commands:
+
+  config             Validate and view the Compose file
+  create             Create services
+  down               Stop and remove containers, networks, images, and volumes
+  exec               Execute a command in a running container
+  help               Get help on a command
+  images             List images
+  kill               Kill containers
+  logs               View output from containers
+  pause              Pause services
+  port               Print the public port for a port binding
+  ps                 List containers
+  pull               Pull service images
+  push               Push service images
+  restart            Restart services
+  rm                 Remove stopped containers
+  run                Run a one-off command
+  scale              Set number of containers for a service
+  start              Start services
+  stop               Stop services
+  top                Display the running processes
+  unpause            Unpause services
+  up                 Create and start containers
+  version            Show the Docker-Compose version information
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+

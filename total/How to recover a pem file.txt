@@ -1,0 +1,10 @@
+How to recover server if we lost pem file?
+
+1)Create a new server with new pem in same Region Same AZ.
+2) Stop the server which u lost pem file.
+3) Detatch Root Volume of the original server and attach to new server as a additional volume.
+4) Mount additonal volume to some folder.
+5) update latest authorized keys from you new server root to additnal volume.
+6) Detach from new server and attach back to original server as root volume.
+
+7) We can access server with new keyapair.

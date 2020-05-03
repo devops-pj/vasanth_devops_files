@@ -1,0 +1,76 @@
+sudo yum install httpd
+
+sudo service httpd status
+sudo service httpd start
+
+Server one
+
+<!DOCTYPE html>
+<html>
+<body style="background-color:powderblue;">
+
+<h1>Welcome To AWS ELB Demo</h1>
+<p>Mithun Technologies</p>
+
+</body>
+</html>
+
+
+Server 2
+
+<!DOCTYPE html>
+<html>
+<body style="background-color:orange;">
+
+<h1>Welcome To AWS ELB Demo</h1>
+<p>Mithun Technologies</p>
+
+</body>
+</html>
+
+Auto Scaling  User Data
+
+#!/bin/bash
+sudo service httpd start
+
+
+Configure policy with 20 %
+
+To test dynamic scaling install below software in any ec2 machine created by autoscaling group Put load
+==================================
+sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum install siege
+
+
+
+# Use your ec2 machine DSN name or Public IP of current machine
+siege -c200 -t5M  http://ec2-13-127-110-165.ap-south-1.compute.amazonaws.com
+
+
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 
+   
+  
+  
+  
+
+ 
+ 
+
+
+
+
+   
+
+    
+  
+
+
+
+

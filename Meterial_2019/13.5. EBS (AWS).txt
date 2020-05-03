@@ -1,0 +1,8 @@
+df -kh -- > Display existing volumes
+
+lsblk  -- > List block Storage
+
+sudo mkdir /media/DISK1
+mkfs.ext2 /dev/xvdf
+
+mount /dev/xvdf /media/DISK1

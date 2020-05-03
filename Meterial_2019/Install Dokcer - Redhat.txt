@@ -1,0 +1,16 @@
+============================
+Instal Docker-Ce on Redhat
+=============================
+sudo yum install yum-utils
+sudo yum install http://vault.centos.org/centos/7.3.1611/extras/x86_64/Packages/container-selinux-2.9-4.el7.noarch.rpm -y
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2 -y
+
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+sudo yum install docker-ce -y
+
+sudo systemctl enable --now docker
+
+sudo usermod -aG docker ${USER}
+
+sudo docker info

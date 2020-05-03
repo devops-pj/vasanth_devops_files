@@ -1,0 +1,242 @@
+
+
+15-02-2020 7:00 PM
+==================
+Docker 
+
+Containarization Platfrom using which we can package our applications(code) & required softwares to run application in the form of
+containers.
+
+Build Once Run AnyWhere(Physical Machine,Virtural Machine,Cloud).
+
+Docker has two editions:
+
+Docker CE --> Community Edition(Open Source)
+ 
+Docker EE --> Enterprise Edition(Commerical)
+
+Components/Terminology:
+=======================
+Docker Image
+Docker Container
+Docker Registry(Repository)
+  Public --> hub.docker.com (Public Accessable from anywhere)
+  Private --> Can be accessable with in private network(Nexus,JFrog)
+Dockerfile
+
+
+
+docker build -t   <repoDetails>/<appName>:<version> . 
+
+ex: 
+# docker hub dockerhandson is username of my repo.Replace dockerhandson with your user name.
+docker build -t dockrhandson/java-web-app:1 .
+ 
+# Image tagged with rivate repo  
+docker build -t 189.98.72.182:8081/java-web-app:1 .
+	
+# Authenticate with Repo
+#Public Repo(docker hub)	
+docker login -u <username> -p <password>
+
+ex:
+
+docker login -u dockerhandson -p password
+
+#Private Repo
+docker login -u <username> -p <password> <URL>	
+
+docker login -u admin -p password 189.98.72.182:8081
+
+# Docker push
+
+docker push <repoDetails>/<appName>:<version>
+
+# Image tagged with Public  Repo
+docker push  dockrhandson/java-web-app:1
+
+# Image tagged with Privare Repo
+docker push 189.98.72.182:8081/java-web-app:1
+
+	
+docker run -d -p <hostPort>:<containerPort> --name <containerName> <imageName>
+
+ex: 
+docker run -d -p 8080:8080 --name javawebappcontainer dockerhandson/java-web-app:1
+	
+
+16-02-2020 6:00 AM
+==================
+
+docker version
+docker --version
+docker info
+
+Image Commands:
+==============
+Docker Image:  It's package which will have all the required components like application                code & softwares which are required to run application. 
+
+Base Images :  Software images which contains some software.Like  			 			                ubuntu,centos,tomcat,mysql,jenkins ..etc.
+               
+			   
+
+Custom Images: We can create our own image using docker file on top of base image which  			   can have application code + Softwares.
+
+
+Create a simple docker image from nginx
+
+# Create one index.html
+vi index.html
+ 
+#Create Dockerfile(Default Name)
+
+FROM nginx
+COPY index.html /usr/share/nginx/html
+
+
+docker build -t <repodetails/appName:version> .
+
+Ex:
+docker build -t dockerhandson/testnginx .
+
+#Tag image with private Repo
+
+docker build -t 189.81.23.41:8081/testnginx .
+
+# List images in the docker machine
+docker images (or)  docker image ls
+
+
+# Authenticat with Repo
+
+# With public repo
+docker login -u <userName> -p <password>
+
+ex:
+docker login -u username -p password
+
+# With Private Rep
+docker login -u <userName>. -p <password>.   <RepoURL>
+
+ex:
+docker login -u admin -p password 189.81.23.41:8081
+
+# Push image to repo
+docker push <repodetails/appName:version>
+
+ex:
+docker push dockerhandson/testnginx
+
+# Download Image From Repo
+docker pull <ImageId/Name>
+
+#Delete Image from docker machine
+docker rmi <ImageName/ImageID>
+
+ex:
+docker rmi dockerhandson/testnginx:latest
+
+docker rmi <ImageName/ImageID> <ImageName/ImageID>
+
+Delete all images
+=================
+docker rmi -f $(docker images -q)
+
+# It will also delete all unsued images
+docker image prune
+
+# It will delete all stopped containers ,all unused images,un used networks.
+docker system prune
+
+# Get more details about an image
+docker image inspect <imageId/ImageName>
+docker inspect <imageId/ImageName>
+
+# Get Layers of an image
+docker history <imageId/ImageName>
+
+docker build
+docker push
+docker login
+docker images or docker image ls
+docker images -q
+docker rmi <imageId/Name>
+docker rmi -f <imageId/Name>  <imageId/Name>
+docker rmi -f $(docker images -q)
+docker image prune
+docker system prune
+docker image inspect <imageId/Name>
+docker inspect <imageId/Name>
+docker history <imageId/Name>
+docker search <imageName>
+
+
+Contanier Commands
+==================
+
+# It will create container from the image but it will not start the container.
+
+docker create --name <contaierName> - p <hostPort>:<containerPort> <imageName>
+
+
+# It will create  & Start container from the image.
+docker run -d --name <contaierName> - p <hostPort>:<containerPort> <imageName>
+
+ex: 
+docker run -d -p 80:80 --name nginxcontianer dockerhandson/testnginx
+
+# Start Container
+docker start <containerId/Name>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+

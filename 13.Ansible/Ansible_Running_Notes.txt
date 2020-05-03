@@ -1,0 +1,100 @@
+
+Ansible 
+Date: 15-Mar-2020 7:00 PM
+
+Host Inventory
+ 
+ Static Inventory. 
+ Its simple file where we will add/maintain Host Machines(Server).
+ Default Location: /etc/ansible/hosts
+   
+   
+ 
+ Dynamic Inventory
+ It's a script(python Script) which will get/read host machines      details from external
+ 
+  sources like directly from AWS,Data Bases ..etc.
+  
+# Ansible adhoc commands
+
+# Below commond will test connectivity(SSH Connection).
+
+
+# Below One will defautl hosts file(/etc/ansible/hosts)
+ansible <group> -m <moduleName> -a <arguments>
+
+
+# Below One will custom  hosts file(Give path of your hosts file which can be anywhere ins your ansible server)
+
+ansible <group> --inventory-file <customlocation> -m <moduleName> -a <arguments for Module>
+
+
+ansible <group> -b -m <module> -a <argument>
+-b --> become(execute commands with privalge(sudo) access)
+
+
+shell & command modules in ansible are non ideompotent.
+
+
+Install Httpd
+ansible appServers -b -m yum -a "name=httpd state=present"
+ 
+Copy Index.html 
+ 
+ansible appSevers -b -m copy -a "src=index.html dest=/var/www/html/index.html"
+ 
+Start httpd Service
+ ansible appServers -b -m service -a "name=httpd state=started"
+
+- hosts: appServers
+  become: true
+  tasks:
+  - name: Install httpd
+    yum:
+	  name: httpd
+	  state: present
+  - name: Copy Index.html
+    copy:
+	  src: index.html
+	  dest: /var/www/html/index.html
+  - name: Start Httpd Service
+    service:
+	  name: httpd
+	  state: restarted	
+	  
+Above Yml & below both are same.
+	  
+- hosts: appServers
+  become: true
+  tasks:
+  - name: Install nginx server
+    yum: name=httpd state=present
+  - name: Copy Index.html
+    copy: src=index.html dest=/var/www/html/index.html	
+  - name: Start nginx server
+    service: name=httpd enabled=yes state=started
+         
+...
+	    	  
+  
+Commonds to execute a play book
+ansible-playbook <playbookName>
+
+ansible-playbook installhttpd.yml
+
+How can we validate ansible playbook?
+
+ansible-playbook <playbookName> --syntax-check
+
+Which module can be using in absible irrepective of linux to install softwares using packagemanagers ?
+ package
+
+
+Play Books
+
+Core Modules
+
+Custom Modules
+
+Connection Plugins
+

@@ -1,0 +1,383 @@
+01-Mar-2020 6:00 AM
+=========== 
+
+Containerization
+Docker
+Rocket
+
+
+Cotainer Orchestration Tools
+Docker Swarm
+
+Kubernetes Can Orchestrate Docker or Rocker(rkt) containers also.
+
+OpenShift
+
+1) Dynamic Scaling.
+
+2) HelathCheck(Liveness Probe & Readyness Probe) On Applications/Containers. If health check fails Contianers will be killed and will create new containers.
+
+3) Kubernetes is  availble as a PAAS in most of the cloud providers.
+    EKS --> Elastic Kuberetes Service --> AWS
+    AKS --> Azure Kubernetes Service --> Azure
+    GKE --> Google Kubernetes Engine --> Google Cloud
+	
+4) Security.	
+
+
+Kubernetes Setup:
+
+Types of Kubernetes Clusters.
+
+  1) Self Managed Kubernetes Cluster.
+  
+     minikube --> Using minikube We can set up single node k8's 				  Cluster.
+	 Kubeadm  --> We can setup multi node k8's cluster.
+	 
+  
+  2) Cloud Managed Services(PAAS).
+    
+    EKS --> Elastic Kuberetes Service --> AWS
+    AKS --> Azure Kubernetes Service --> Azure
+    GKE --> Google Kubernetes Engine --> Google Cloud
+
+    KOPS --> Kubernetes Operations using which we can setup k8s in 			 AWS.
+
+01-Mar-2020 7:00 PM
+
+Kubernetes Objects:
+
+POD
+
+Replication Controller
+
+Replica Set
+
+DaemonSet
+
+Deployment
+
+Service
+
+Kubenetes Manifest
+
+POD
+
+Sample POD Mainifest
+
+# Single Container POD
+apiVersion: v1
+kind: Pod
+metadata:
+  name:  <PODName>
+  labels:
+    <labelKey>: <labelValue> 
+spec:
+  containers:
+  - name: <nameOftheCotnainer>
+    image: <imageName>
+	ports:
+	- containerPort: <portNumberOfContainer>
+
+
+
+Ex:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: javawebapppod
+  labels:
+     app: javawebapp
+spec:
+  containers:
+  - name: javawebappcontainer
+    image: dockerhandson/java-web-app
+	ports:
+	- containerPort: 8080
+		 
+
+# Multi Container POD
+apiVersion: v1
+kind: Pod
+metadata:
+  name:  <PODName>
+  labels:
+    <labelKey>: <labelValue> 
+spec:
+  containers:
+  - name: <nameOftheCotnainer>
+    image: <imageName>
+	ports:
+	- containerPort: <portNumberOfContainer>
+  - name: <nameOftheCotnainer>
+    image: <imageName>
+    ports:
+    - containerPort: <portNumberOfContainer>	
+
+
+
+Service Manifest
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: <ServiceName>
+spec:
+  selector:
+    <PodLabelKey>: <PodLabelValue>
+  type: <servcieType>  # ClusterIP/NodePort/LoadBalancer
+  ports:
+  - port: <sevicePort>
+    targetPort: <containerPortOfPod>
+	nodePort: <nodePort> # This Applicable only of type is NodePort .Random Port Number 	which is availble in Kubertes servers(30000-32767)
+
+With in Cluster ClusterIP
+==========================
+apiVersion: v1
+kind: Service
+metadata:
+  name: javawebapp
+spec:
+  selector:
+     app: javawebapp
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+
+Out Cluster Node Port
+====================
+apiVersion: v1
+kind: Service
+metadata:
+  name: javawebapp
+spec:
+  selector:
+     app: javawebapp
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8080
+	nodePort: 30033 # This Optional if u don't mention nodePort.Kuberetes will assign.
+
+
+07:03-2020 6:00 AM
+
+
+# Single Container POD
+apiVersion: v1
+kind: Pod
+metadata:
+  name:  <PODName>
+  labels:
+    <labelKey>: <labelValue> 
+spec:
+  containers:
+  - name: <nameOftheCotnainer>
+    image: <imageName>
+	ports:
+	- containerPort: <portNumberOfContainer>
+
+
+
+# Replication Controller
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: <rcName>
+spec:
+  replicas: <NoOfReplicas>
+  selector:
+    <podLabelKey> : <Value>
+  template:
+    metadata:
+       name: <PodName>
+	   labels:
+	     <podLabelKey>: <value>
+    spec:
+	  containers:
+	  - name: <nameOfTheContainer>
+	    image: <ImageName>
+		ports:
+		- containerPort: <PortOfContainer>
+Example
+		
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: javawebapprc
+spec:
+  replicas: 2
+  selector:
+    app: javawebapp
+  template:
+    metadata:
+      #name: javawebapppod
+      labels:
+        app: javawebapp
+    spec:
+     containers:
+     - name: javawebappcontainer
+       image: dockerhandson/java-web-app
+       ports:
+       - containerPort: 8080
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: javawebapp
+spec:
+  type: NodePort
+  selector:
+    app: javawebapp
+  ports:
+  - port: 80
+    targetPort: 8080
+
+commands:
+
+kubectl apply -f <rcFileName.yml>
+kubectl get rc
+kubectl scale rc <rcName> --replicas <noOfReplicas>
+kubectl describe rc <rcName>
+kubectl delete rc <rcName> 
+
+			
+Difference b/w RC & RS ?
+Rs is next genration of RC.Only difference is in selector support.Replication Controller Supports only Equality Based Selector.Where as RS(ReplicaSet) supports equality based & set based selectors.
+
+# Replication Set
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: <rcName>
+spec:
+  replicas: <NoOfReplicas>
+  selector:
+    matchLabels:
+      <podLabelKey> : <Value>
+  template:
+    metadata:
+       name: <PodName>
+	   labels:
+	     <podLabelKey>: <value>
+    spec:
+	  containers:
+	  - name: <nameOfTheContainer>
+	    image: <ImageName>
+		ports:
+		- containerPort: <PortOfContainer>
+    
+    
+# Replica Set Example
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: javawebapprs
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: javawebapp  
+  template:
+    metadata:
+      #name: javawebapppod
+      labels:
+        app: javawebapp
+    spec:
+     containers:
+     - name: javawebappcontainer
+       image: dockerhandson/java-web-app
+       ports:
+       - containerPort: 8080
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: javawebapp
+spec:
+  type: NodePort
+  selector:
+    app: javawebapp
+  ports:
+  - port: 80
+    targetPort: 8080  
+	
+
+commands:
+
+kubectl apply -f <rsFileName.yml>
+kubectl get rs
+kubectl scale rs <rcName> --replicas <noOfReplicas>
+kubectl describe rs <rcName>
+kubectl delete rs <rcName> 
+	
+# DaemonSet 
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: <rcName>
+spec:
+  selector:
+    matchLabels:
+      <podLabelKey> : <Value>
+  template:
+    metadata:
+       name: <PodName>
+	   labels:
+	     <podLabelKey>: <value>
+    spec:
+	  containers:
+	  - name: <nameOfTheContainer>
+	    image: <ImageName>
+		ports:
+		- containerPort: <PortOfContainer>		
+
+# DaemonSet Example
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: javawebappds
+spec:
+  selector:
+    matchLabels:
+      app: javawebapp  
+  template:
+    metadata:
+      #name: javawebapppod
+      labels:
+        app: javawebapp
+    spec:
+     containers:
+     - name: javawebappcontainer
+       image: dockerhandson/java-web-app
+       ports:
+       - containerPort: 8080
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: javawebapp
+spec:
+  type: NodePort
+  selector:
+    app: javawebapp
+  ports:
+  - port: 80
+    targetPort: 8080
+
+commands:
+
+kubectl apply -f <dsFileName.yml>
+kubectl get ds
+kubectl describe ds <rcName>
+kubectl delete ds <rcName> 
+
+
+
+

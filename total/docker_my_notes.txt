@@ -1,0 +1,2 @@
+to download public images, we contact through proxy. 
+we use nexas and nexus uses proxy to download images from docker hub.

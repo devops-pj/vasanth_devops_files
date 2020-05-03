@@ -1,0 +1,101 @@
+﻿Resume Preparation
+------------------
+Resume Name: MithunReddy_3Years_DevOps_QA.doc
+
+Devops --> Wrong
+DevOps --> Correct
+
+genkins--> Wrong
+Jenkins --> Correct
+
+Keep all words first character is capital letter like below.
+Maven Build Tool
+Docker Containerisation Tool
+
+Keep all the know tool only.
+Keep all the known roles and responsibilitis only.
+
+Just know breaf about Project and number of modules and names.
+
+Need to know client of that project.
+-----------------------------------------------------------------------
+Tell me about your self?
+
+Ans)My Name is XXXXXXX,
+I am having X Years of experience as a DevOps Engineer,
+For the last XX years I have been working in XX Company as a DevOps Engineer. 
+In that position, I have worked on various tools like Git,GitHub,Bitbucket and build tools like ANT,Maven, Sonarqube as a source code management tool, Nexus and Jfrog are the Arftifactory repos, Jenkins is my CI server, Ansible, DOcker for Containerisation Deployment, Newrelic is the monitoring tool. .. AWS..
+ 
+Coming to my roles and responsibilities
+-—-------------------------------------
+--Created and Maintained Github repositories, branches and tags for multiple projects.
+--Configuring Maven scripts with Jenkins based on type of project.
+--Automating the Build process using Git and Maven
+--Configured Git with Jenkins and schedule jobs using Poll SCM option
+--Build, release and configuration management of production systems.
+--Experiecned in docker,docker swarm.
+--Good in writing docker files,docker compose files.
+--Automating deployment in docker swarm cluster using docker and jenkins.
+
+
+--Have Strong scripting and automation skills.
+--Have good knowledge on Windows and Linux system administration.
+--Have Experience with system monitoring tools (e.g. NewRelic).
+--Deploying, automating, maintaining and managing AWS cloud based production system,
+  to ensure the availability, performance, scalability and security of productions         
+  systems.
+ 
+ Remember about your consultancies name, address,HR name and PM.
+ 
+ While explaining about your self, mention the positive points about your company
+ and your boss.
+
+ -Your points should be benificial to the company and the job role you are applying.
+
+ Like: I have suggested the SonarQube for Source COde Quality Mgt 
+ With this devlopment team achived the healthy code.
+
+ Suggested the Git Best Practices.
+------------------------------------------------------------------------
+BreakUp Letter
+OfferLetter/Employment Letter
+How many days your notice Period?
+Are you serving notice Period?
+Are you Permanent to Wipro?
+Say No, I am working under payroll of XXX company and deputed in client location Wipro.
+
+What is your payrool compnay name?
+Say your consultency name. Dont call consultency ant time.
+
+Can you tell me your daily activities?
+I will check my Jira board, what are the taks are assigned to me,
+I will start working on based on priority.
+If any new project on boarded, I will do set up for that project from scratch.
+and will support for already existing job which we created in Jenkins.
+If any job will fail, will look into that and will resoleve.
+
+
+Everyday we have scrum meeting/Standup meeting.(15 mins as per Agile standards)
+In meeting we will discuss what we did yesterday and and what we are going
+to do today.
+If any blockers, we will call out in standup meeting.
+Scrum Master will work with respective person will resolve.
+
+
+OOO
+
+
+NNTO : Today I am WFH
+BRB 10 mins
+YW
+ASAP
+
+EOD
+
+EOM
+
+MOM
+
+------------------------------------------------------------------------
+
+

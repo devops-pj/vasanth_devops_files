@@ -1,0 +1,136 @@
+1. What is git?
+Git is a distributed version-control system for tracking changes in source code during software development.
+Git is an Open-source version control system that was started by Linus Trovalds
+
+2. Write down 5 SCM names?
+HitHub, Bigbucket, Hitlab, SVN, CVS, TVS
+
+3. What is the abbreviation of VCS?
+Version Control System
+
+4. What is the abbreviation of SCM?
+Software configuration management (SCM)
+Source Code Management
+
+5. What is Branch?
+Branch is nothing but another line of development
+The default branch name in Git is master.
+
+6. What is tag?
+Tag we will use in Production relese, Once we'll create we won't change
+
+7.What is the difference between Branch and Tag?
+Branch: Branch is nothing but another line of development.The default branch name in Git is master.
+Tag: Tag we will use in Production relese, Once we'll create we won't change
+
+8. When we will create the branch and when we will the create tag?
+branches are created at the time of development.
+Tags are used for creating stable releases. To create a tag for using with the Git Drupal Repository
+
+9. What is “git add” command will do?
+It will send the code from Working Area to Staging Area
+
+10. What is the command to revert the code from staging area to working area?
+git reset vasanth.txt(File Name)
+
+11.What is the git revert command?
+It will revert the changes committed in that particular commit id from local repo
+
+12.What is the difference between fetch and pull in Git?
+git fetch: It will get the update from git remote repo and will update your local repo. But it will not merge with Local Working copy
+git pull: It will get the update from git remote repo and will update your local repo as well it will merge with local working copy also
+
+13. How to see how many branches are currently available in git repo?
+git branch -v
+
+14. What is the command to create the branch?
+git branch Development(Branch Name)
+
+15. How to switch from branch to another branch?
+git checkout Development(Branchname)
+
+16. How to create branch and how to switch to that branch in one command?
+$ git checkout -b team<branch_name>
+
+17. What is the command to delete the branch in local repo?
+git branch -d team(Branch Name)
+
+18. What is the command to delete branch in remote repo?
+git push Health(AN) : team(BN) or git push Health -delete team
+
+19. What is the branching strategy you are following?
+Branching allows a team of developers to collaborate inside of one central code base(master). 
+Team members publish, share, review and iterate on code changes through Git branches shared with others. 
+Adopt a branching strategy for your team.
+
+20. What is git stash command?
+git stash temporarily stashes changes you are made to ur working copy so u can work on something else,
+and then come back and re-apply them later on
+
+21.What is git cherry-pick ?
+Cherry picking in git means to choose a commit from one branch and apply it onto another
+
+22. What does git rebase?
+the rebase command integrates changes from one branch into another. 
+It is an alternative to the better known "merge" command.
+
+23.What is PAT?
+personal access tokens (PAT)
+
+24. What is SSH key and how to generate ssh-key?
+An SSH key is an alternate way to identify yourself that doesn't require you to enter you username and password every time
+Using ssh-keygen(Default)
+Using ssh-keygen -t dsa(Custom)
+
+25. What is the default path for ssh keys?
+/home(~)/.ssh
+
+26. How many file will generate if you create ssh keys and what are the file names?
+two files will create
+id_rsa
+id_rsa.pub
+
+27. What is the difference between git & GitHub?
+Git is a revision control system, a tool to manage your source code history. 
+GitHub is a hosting service for Git repositories. So they are not the same thing: Git is the tool, 
+GitHub is the service for projects that use Git.
+
+28. What are the git best practices while committing the code need to follow?
+Commit Related Changes
+Commit Often
+Don't Commit Half-Done Work
+Test Your Code Before You Commit
+Write Good Commit Messages
+Use Branches & Tags
+
+29. How to change git commit message after push (given that no one pulled from remote)?
+git commit -amend -m "Message"
+
+30. How to rename the branch name?
+git branch -m team(oldname) team1(newname)
+
+31. What is the command to get the code from remote git repo?
+git clone URL
+git fetch Hello
+git pull Hello
+
+32. How to check the particular branch from github? 
+git clone https://github.com/pyqtgraph/pyqtgraph -b https://github.com/3rdcycle/pyqtgraph/tree/date-axis-item/pyqtgraph/graphicsItems
+
+33. What is the command to see all git messages in local repo?
+git log --grep=<pattern>
+
+34. How to create the repository in git?
+git init
+
+35. How to check if a branch is already merged with any branch or not?
+git branch --merged master(another branchname)
+
+36. What is SubGit?
+SubGit is a tool for a smooth, 
+stress-free SVN to Git migration. 
+Create a writable Git mirror of a local or 
+remote Subversion repository and use both Subversion and Git as long as you like.
+
+37. What language is used in Git?
+Git commands in all kinds of languages -- naturally shell and Perl, but I've also seen Python
